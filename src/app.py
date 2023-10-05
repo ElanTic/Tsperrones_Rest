@@ -134,6 +134,31 @@ def leer_pertenencia(id):
     except Exception as ex:
         return jsonify({'resul': 'Error'})
 
+@app.route('/jovenes/pertenencias/<id>', methods=['GET'])
+def leer_pertenencias_joven(id):
+    try:
+        cursor = conexion.connection.cursor()
+        sql = "SELECT * FROM pertenencia WHERE dueno = '{0}'".format(id)
+        cursor.execute(sql)
+        datos = cursor.fetchall()
+        pertenencias = []
+        for fila in datos:
+            pertenencia = {
+                'id': fila[0],
+                'dueno': fila[1],
+                'nombre': fila[2],
+                'categoria': fila[3],
+                'marca': fila[4],
+                'modelo': fila[5],
+                'color': fila[6],
+                'descripcion': fila[7],
+                'foto': fila[8]
+            }
+            pertenencias.append(pertenencia)
+        return jsonify({'Pertenencias': pertenencias, 'resul': 'results'})
+
+    except Exception as ex:
+        return jsonify({'resul': 'Error'})
 
 @app.route('/pertenencias', methods=['POST'])
 def agregar_pertenencia():
@@ -231,6 +256,31 @@ def leer_ficha_objeto_p(id):
             }
             return jsonify({'FichaObjetoP': ficha_objeto_p, 'resul': 'encontrado'})
         return jsonify({'resul': 'Not found'})
+
+    except Exception as ex:
+        return jsonify({'resul': 'Error'})
+
+
+@app.route('/jovenes/posts/<id>', methods=['GET'])
+def leer_post_joven(id):
+    try:
+        cursor = conexion.connection.cursor()
+        sql = "SELECT * FROM ficha_objeto_p WHERE owner_id = '{0}'".format(id)
+        cursor.execute(sql)
+        datos = cursor.fetchall()
+        fichas_objeto_p = []
+        for fila in datos:
+            ficha_objeto_p = {
+                'id': fila[0],
+                'date_found': fila[1],
+                'date_lost': fila[2],
+                'ubicacion': fila[3],
+                'is_found': fila[4],
+                'owner_id': fila[5],
+                'pertenencia_id': fila[6]
+            }
+            fichas_objeto_p.append(ficha_objeto_p)
+        return jsonify({'FichasObjetoP': fichas_objeto_p, 'resul': 'results'})
 
     except Exception as ex:
         return jsonify({'resul': 'Error'})
