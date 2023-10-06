@@ -22,7 +22,7 @@ def listar_jovenes():
         for fila in datos:
             joven ={'nombre': fila[0], 'email': fila[1], 'telefono': fila[2], 'contacto' : fila[3]}
             jovenes.append(joven)
-        return jsonify({'Jovenes': jovenes, 'resul':"resuls"})
+        return jsonify(jovenes)
 
     except Exception as ex: 
         return jsonify({'resul': 'Error'})
@@ -36,7 +36,7 @@ def leer_joven(nombre):
         datos = cursor.fetchone()
         if datos != None:
             joven = {'nombre': datos[0], 'email': datos[1], 'telefono': datos[2], 'contacto' : datos[3]}
-            return jsonify({'Joven': joven, 'resul': 'encontrado'})
+            return jsonify(joven)
         return jsonify({'resul': 'Not found'})
     except Exception as ex:
         return jsonify({'resul': 'Error'})
@@ -82,57 +82,8 @@ def actualizar_joven(nombre):
 ahora va lo de la pertenencia
 '''
 
-@app.route('/pertenencias', methods=['GET'])
-def listar_pertenencias():
-    try:
-        cursor = conexion.connection.cursor()
-        sql = "SELECT * FROM pertenencia"
-        cursor.execute(sql)
-        datos = cursor.fetchall()
-        pertenencias = []
-        for fila in datos:
-            pertenencia = {
-                'id': fila[0],
-                'dueno': fila[1],
-                'nombre': fila[2],
-                'categoria': fila[3],
-                'marca': fila[4],
-                'modelo': fila[5],
-                'color': fila[6],
-                'descripcion': fila[7],
-                'foto': fila[8]
-            }
-            pertenencias.append(pertenencia)
-        return jsonify({'Pertenencias': pertenencias, 'resul': 'results'})
-
-    except Exception as ex:
-        return jsonify({'resul': 'Error'})
 
 
-@app.route('/pertenencias/<id>', methods=['GET'])
-def leer_pertenencia(id):
-    try:
-        cursor = conexion.connection.cursor()
-        sql = "SELECT * FROM pertenencia WHERE id = {0}".format(id)
-        cursor.execute(sql)
-        datos = cursor.fetchone()
-        if datos is not None:
-            pertenencia = {
-                'id': datos[0],
-                'dueno': datos[1],
-                'nombre': datos[2],
-                'categoria': datos[3],
-                'marca': datos[4],
-                'modelo': datos[5],
-                'color': datos[6],
-                'descripcion': datos[7],
-                'foto': datos[8]
-            }
-            return jsonify({'Pertenencia': pertenencia, 'resul': 'encontrado'})
-        return jsonify({'resul': 'Not found'})
-
-    except Exception as ex:
-        return jsonify({'resul': 'Error'})
 
 @app.route('/jovenes/pertenencias/<id>', methods=['GET'])
 def leer_pertenencias_joven(id):
@@ -155,10 +106,11 @@ def leer_pertenencias_joven(id):
                 'foto': fila[8]
             }
             pertenencias.append(pertenencia)
-        return jsonify({'Pertenencias': pertenencias, 'resul': 'results'})
+        return jsonify(pertenencias)
 
     except Exception as ex:
         return jsonify({'resul': 'Error'})
+
 
 @app.route('/pertenencias', methods=['POST'])
 def agregar_pertenencia():
@@ -231,7 +183,7 @@ def listar_fichas_objeto_p():
                 'pertenencia_id': fila[6]
             }
             fichas_objeto_p.append(ficha_objeto_p)
-        return jsonify({'FichasObjetoP': fichas_objeto_p, 'resul': 'results'})
+        return jsonify(fichas_objeto_p)
 
     except Exception as ex:
         return jsonify({'resul': 'Error'})
@@ -254,7 +206,7 @@ def leer_ficha_objeto_p(id):
                 'owner_id': datos[5],
                 'pertenencia_id': datos[6]
             }
-            return jsonify({'FichaObjetoP': ficha_objeto_p, 'resul': 'encontrado'})
+            return jsonify(ficha_objeto_p)
         return jsonify({'resul': 'Not found'})
 
     except Exception as ex:
@@ -280,11 +232,10 @@ def leer_post_joven(id):
                 'pertenencia_id': fila[6]
             }
             fichas_objeto_p.append(ficha_objeto_p)
-        return jsonify({'FichasObjetoP': fichas_objeto_p, 'resul': 'results'})
+        return jsonify(fichas_objeto_p)
 
     except Exception as ex:
         return jsonify({'resul': 'Error'})
-
 
 @app.route('/fichas_objeto_p', methods=['POST'])
 def agregar_ficha_objeto_p():
